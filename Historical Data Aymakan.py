@@ -1,21 +1,24 @@
 import streamlit as st
 import pandas as pd
 
-# Title for the dashboard
-st.title("CSV Data Dashboard")
+# Load the dataset
+df = pd.read_excel('Revenue by Account Managers.xlsx')
 
-# Upload the CSV file
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+# Streamlit layout
+st.title("Revenue Dashboard")
+st.write("Revenue data by Account Managers")
 
-# Check if a file is uploaded
-if uploaded_file is not None:
-    # Read the CSV file into a pandas DataFrame
-    df = pd.read_csv(uploaded_file)
+# Display the dataframe
+st.write(df)
 
-    # Display the DataFrame as a table
-    st.write("Data Preview:")
-    st.write(df)
+# Add some interactive filters (e.g., filter by Account Manager)
+selected_manager = st.selectbox("Select Account Manager", df['Account Manager'].unique())
+filtered_data = df[df['Account Manager'] == selected_manager]
+st.write(filtered_data)
 
-    # Show basic statistics
-    st.write("Summary Statistics:")
-    st.write(df.describe())
+# Display some summary statistics
+st.write("Summary statistics")
+st.write(filtered_data.describe())
+
+# Simple bar chart showing revenue over months
+st.bar_chart(filtered_data[['months', 'Revenue']].set_index('months'))
